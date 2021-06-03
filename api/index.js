@@ -3,6 +3,7 @@ var r = express.Router();
 
 // load pre-trained model
 const model = require('./sdk/model.js');
+const cls_model = require('./sdk/cls_model.js'); // cls
 
 // Bot Setting
 const TelegramBot = require('node-telegram-bot-api');
@@ -10,86 +11,78 @@ const token = '1735227915:AAHFFTF2xI_P0iGvQBgxYHFbmOFC5pLKY-0'
 const bot = new TelegramBot(token, {polling: true});
 
 
-// bots
-let state = 2;
-bot.onText(/\/start/, (msg) => {    
-    state = 0;
+state =0;
+// Main Menu Bot
+bot.onText(/\/start/, (msg) => {
     bot.sendMessage(
         msg.chat.id,
-        `Selamat datang di BOT prediksi Tegangan & Daya menggunakan Deep Neural Network.
-        \nSilahkan pilih menu dibawah ini:\n
-        (/1) Prediksi dengan Input i|r
-        (/2) Batal`
-    ); 
-    bot.sendMessage(msg.chat.id, "Pilihan Anda: ");    
+        `hello $(msg.chat.fist_name), welcome...\n
+        click /predict`
+    );
+    state = 0;
 });
 
-bot.onText(/\/1/, (msg) => {
-    state = 1;
+// input requires i and r 
+bot.onText(/\/predict/, (msg) => {
     bot.sendMessage(
-        msg.chat.id, 
-        `Masukan nilai i dan r dengan format i|r \n
-        contohnya: 12|36`
-    );   
-});
-
-bot.onText(/\/2/, (msg) => {
-    state = 2;
-    bot.sendMessage(
-        msg.chat.id, 
-        "pilih /start untuk kembali ke menu utama"
-    );   
+        msg.chat.id
+        `masukan nilai i|v contohnya 13|13`
+    );
+    state = 0;
 });
 
 bot.on('message', (msg) => {
-    const text = msg.text.toString().toLowerCase();
-    console.log(text);
-
     if(state == 1){
-        let dt = text.split('|');
-        bot.sendMessage(
-            msg.chat.id, 
-            `prediksi tegangan dan daya dengan arus (${dt[0]} A) dan resistansi (${dt[1]} Ohm) `
-        );
+        s = msg.text.split("|");
+        i = parseFloat(s[0])
+        r = parseFloat(s[1])
 
         model.predict(
             [
-                parseFloat(dt[0]), // string to float
-                parseFloat(dt[1])
+                i, // string to float
+                r
             ]
-        ).then((jres) => {
-            bot.sendMessage(
-                msg.chat.id, 
-                `nilai v dan p adalah (${jres[0]} volt) dan (${jres[1]} watt)`
-            );
-            bot.sendMessage(
-                msg.chat.id,
-                `<= kembali /2`
-            );
-        });        
-    }
+         ).then((jres1)=>{
+             console.log(jres1);
 
-    if(state == 2){
-        bot.sendMessage(
-            msg.chat.id, 
-            "pilih /start untuk ke menu utama"
-        );   
-    }
+             cls_model.classify([i, r, v, p]).then((jres2)=>{
+                 bot.sendMessage(
+                         msg.chat.id,
+                         `nilai v yang diprediksi adalah ${v} volt`
+                 );
+                          msg.chat.id,
+                         `nilai p yang diprediksi adalah ${p} volt`
+                 );
+                 bot.sendMessage(
+                         msg.chat.id
+                         `klasifikasi Tegangan ${jres2}`
+                 );
+             })
+         })
+     }else{
+         state = 0 
+     }
 })
 
-
-
-// routers
-r.get('/prediction/:i/:r', function(req, res, next) {    
-    model.predict(
-        [
-            parseFloat(req.params.i), // string to float
-            parseFloat(req.params.r)
-        ]
-    ).then((jres)=>{
-        res.json(jres);
-    })
+// routers 
+r.get('/predict/:i/:r', function(req, res, next) {
+   model.predict(
+       [
+           parseFloat(req.params.i), // string to float
+           parseFloat(req.params.r)
+       ]
+   ).then((jres)=>{
+       cls_model.classify(
+            [
+                parseFloat(req.params.i), // string to float
+                parseFloat(req.params.r),
+                parseFloat(jres[0]),
+                parseFloat(jres[1])
+            ]
+        ).then((jres_)=>{
+           res.json(jres_)
+        })
+     })
 });
-
 
 module.exports = r;
