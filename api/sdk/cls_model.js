@@ -8,6 +8,7 @@ function normalized(data){ // i & r
     return [i, r, v, p]
 }
 
+
 async function predict(data){
     let in_dim = 4; // i r v p 
     
