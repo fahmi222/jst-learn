@@ -3,8 +3,8 @@ const tf = require('@tensorflow/tfjs-node');
 function normalized(data){ // i & r
     i = (data[0] - 12.585) / 6.813882
     r = (data[1] - 51.4795) / 29.151289
-    r = (data[2] - 51.4795) / 29.151289
-    r = (data[3] - 51.4795) / 29.151289
+    v = (data[2] - 51.4795) / 29.151289
+    p = (data[3] - 51.4795) / 29.151289
     return [i, r, v, p]
 }
 
@@ -27,7 +27,7 @@ function ArgMax(res){
    return label 
 }
 
-async function predict(data){
+async function classify (data){
     let in_dim = 4; // i r v p 
     
     data = normalized(data);
