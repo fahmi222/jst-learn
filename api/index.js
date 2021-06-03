@@ -68,7 +68,7 @@ bot.on('message', (msg) => {
 })
 
 // routers 
-r.get('/predict/:i/:r', function(req, res, next) {
+r.get(`/predict/:i/:r`, function(req, res, next) {
    model.predict(
        [
            parseFloat(req.params.i), // string to float
@@ -80,7 +80,7 @@ r.get('/predict/:i/:r', function(req, res, next) {
 });
 
 // routers 
-r.get('/classify/:i/:r', function(req, res, next) {
+r.get(`/classify/:i/:r`, function(req, res, next) {
    model.predict(
        [
            parseFloat(req.params.i), // string to float
