@@ -3,7 +3,7 @@ var r = express.Router();
 
 // load pre-trained model
 const model = require('./sdk/model.js'); // predict
-const cls_model = require('./sdk/ex_cls_model.js'); // cls
+const cls_model = require('./sdk/cls_model.js'); // cls
 
 // Bot Setting
 const TelegramBot = require('node-telegram-bot-api');
@@ -11,7 +11,7 @@ const token = '1735227915:AAHFFTF2xI_P0iGvQBgxYHFbmOFC5pLKY-0'
 const bot = new TelegramBot(token, {polling: true});
 
 
-state =0;
+state = 0;
 // Main Menu Bot
 bot.onText(/\/start/, (msg) => {
     bot.sendMessage(
@@ -42,7 +42,7 @@ bot.on('message', (msg) => {
          ).then((jres1)=>{
             console.log(jres1);
 
-             cls_model.classify(parseFloat(s[0]), parseFloat(s[1]), parseFloat(jres1[0]), parseFloat(jres[1])]).then((jres2)=>{
+             cls_model.classify(i, r, parseFloat(jres1[0]), parseFloat(jres1[1])]).then((jres2)=>{
                  bot.sendMessage(
                          msg.chat.id,
                          `nilai v yang diprediksi adalah ${jres1[0]} volt`
