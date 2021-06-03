@@ -28,7 +28,7 @@ bot.onText(/\/predict/, (msg) => {
         msg.chat.id
         `masukan nilai i|v contohnya 13|13`
     );
-    state = 0;
+    state = 1;
 });
 
 bot.on('message', (msg) => {
@@ -47,6 +47,7 @@ bot.on('message', (msg) => {
                          msg.chat.id,
                          `nilai v yang diprediksi adalah ${jres1[0]} volt`
                  );
+                 bot.sendMessage(
                           msg.chat.id,
                          `nilai p yang diprediksi adalah ${jres1[1]} volt`
                  );
@@ -95,7 +96,7 @@ r.get('/classify/:i/:r', function(req, res, next) {
                 parseFloat(jres[1])
             ]
         ).then((jres_)=>{
-           res.json(jres_)
+           res.json({jres, jres_})
         })
      })
 });
