@@ -71,6 +71,19 @@ r.get('/predict/:i/:r', function(req, res, next) {
            parseFloat(req.params.i), // string to float
            parseFloat(req.params.r)
        ]
+   ).then((jres_)=>{
+       res.json(jres_)
+    })
+  })
+});
+
+// routers 
+r.get('/classify/:i/:r', function(req, res, next) {
+   model.predict(
+       [
+           parseFloat(req.params.i), // string to float
+           parseFloat(req.params.r)
+       ]
    ).then((jres)=>{
        cls_model.classify(
             [
