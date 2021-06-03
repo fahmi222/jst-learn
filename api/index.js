@@ -2,7 +2,7 @@ var express = require('express');
 var r = express.Router();
 
 // load pre-trained model
-const model = require('./sdk/model.js'); // predict
+const ex_model = require('./sdk/ex_model.js'); // predict
 const direct_model = require('./sdk/direct_model.js'); // cls
 
 // Bot Setting
