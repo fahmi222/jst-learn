@@ -17,7 +17,7 @@ function ArgMax(res){
     for(i=0; i<res.length; i++){
         cls_data[i] = res[i]
   } 
-  console.log(cls_data,argMax(cls_data));
+  console.log(cls_data, argMax(cls_data));
   
   if(argMax(cls_data) == 1){
       label = "OVER VOLTAGE"
@@ -44,7 +44,7 @@ async function predict(data){
                 tf_data
         );
         result = predict.dataSync();
-        return // denormalized( result );
+        return ArgMax ( result );
         
     }catch(e){
       console.log(e);
@@ -52,6 +52,5 @@ async function predict(data){
 }
 
 module.exports = {
-    predict: predict 
+    classify: classify
 }
-  
