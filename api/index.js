@@ -25,7 +25,7 @@ bot.onText(/\/start/, (msg) => {
 // input requires i and r 
 bot.onText(/\/predict/, (msg) => {
     bot.sendMessage(
-        msg.chat.id
+        msg.chat.id,
         `masukan nilai i|v contohnya 13|13`
     );
     state = 1;
