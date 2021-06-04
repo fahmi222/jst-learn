@@ -56,7 +56,7 @@ bot.on('message', (msg) => {
                          `nilai p yang diprediksi adalah ${p} watt`
                  );
                  bot.sendMessage(
-                         msg.chat.id
+                         msg.chat.id,
                          `klasifikasi Tegangan ${jres2}`
                  );
              })
@@ -67,7 +67,7 @@ bot.on('message', (msg) => {
 })
 
 // routers 
-r.get(`/predict/:i/:r`, function(req, res, next) {
+r.get('/predict/:i/:r', function(req, res, next) {
    model.predict(
        [
            parseFloat(req.params.i), // string to float
@@ -79,7 +79,7 @@ r.get(`/predict/:i/:r`, function(req, res, next) {
 });
 
 // routers 
-r.get(`/classify/:i/:r`, function(req, res, next) {
+r.get('/classify/:i/:r', function(req, res, next) {
    model.predict(
        [
            parseFloat(req.params.i), // string to float
