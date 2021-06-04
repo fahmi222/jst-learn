@@ -1,101 +1,51 @@
-var express = require('express');
-var r = express.Router();
+const tf = require('@tensorflow/tfjs-node');
 
-// load pre-trained model
-const model = require('./sdk/model.js'); // predict
-const clsmodel = require('./sdk/clsmodel.js'); // cls
+function normalized(data){ // i & r
+    i = (data[0] - 12.585) / 6.813882
+    r = (data[1] - 51.4795) / 29.151289
+    r = (data[1] - 650.4795) / 552.6351
+    r = (data[1] - 10620.56) / 12152.78
+    return [i, r, v, p]
+}
 
-// Bot Setting
-const TelegramBot = require('node-telegram-bot-api');
-const token = '1735227915:AAHFFTF2xI_P0iGvQBgxYHFbmOFC5pLKY-0'
-const bot = new TelegramBot(token, {polling: true});
+const argFact = (compareFn) => (array) => array.map((el, idc) => [el, idx].reduce(compareFn)[1]
+const arfMax = argFact((min, el0 => (el[0] > min[0] ? el : min))
 
-state = 0;
-// Main Menu Bot
-bot.onText(/\/start/, (msg) => {
-    bot.sendMessage(
-        msg.chat.id,
-        `hello $(Fahmi Baihaqi), welcome...\n
-        click /predict`
-    );
-    state = 0;
-});
+function argMax(res){
+     label = "NORMAL"
+     if(argMax(res) == 1){
+         label = "OVER VOLTAGE"
+     }if(argMax(res) ==2){
+         label = "DROP VOLTAGE"
+     }
+     return label
+}
 
-// input requires i and r 
-bot.onText(/\/predict/, (msg) => {
-    bot.sendMessage(
-        msg.chat.id,
-        `masukan nilai i|v contohnya 13|13`
-    );
-    state = 1;
-});
+async function classify(data){
+    let in_dim = 4; i r v p 
+    
+    data = normalized(data);
+    shape = [1, in_dim];
 
-bot.on('message', (msg) => {
-    if(state == 1){
-        s = msg.text.split("|");
-        i = parseFloat(s[0])
-        r = parseFloat(s[1])
+    tf_data = tf.tensor2d(data, shape);
+
+    try{
+        // path load in public access => github
+        const path = 'https://raw.githubusercontent.com/fahmi222/jst-learn/main/public/clsmodel/model.json';
+        const model = await tf.loadGraphModel(path);
         
-        model.predict(
-            [
-               i, // string to float
-               r   
-            ]
-         ).then((jres1)=>{
-            console.log(jres1);
-            
-            cls_model.classify([i, r, parseFloat(jres1[0]), parseFloat(jres1[1])]).then((jres2)=>{
-                 bot.sendMessage(
-                         msg.chat.id,
-                         `nilai v yang diprediksi adalah ${jres1[0]} volt`
-                 );
-                 bot.sendMessage(
-                          msg.chat.id,
-                         `nilai p yang diprediksi adalah ${jres1[1]} watt`
-                 );
-                 bot.sendMessage(
-                         msg.chat.id,
-                         `Klasifikasi Tegangan ${jres2}`
-                 );
-                  state = 0;
-             })
-         })
-   }else{
-         state = 0;
-  })
-})
+        predict = model.predict(
+                tf_data
+        );
+        result = predict.dataSync();
+        return denormalized( result );
+        
+    }catch(e){
+      console.log(e);
+    }
+}
 
-// routers 
-r.get('/predict/:i/:r', function(req, res, next) {
-   model.predict(
-       [
-           parseFloat(req.params.i), // string to float
-           parseFloat(req.params.r)
-       ]
-   ).then((jres_)=>{
-       res.json(jres);
-    })
-});
-
-// routers 
-r.get('/classify/:i/:r', function(req, res, next) {
-   model.predict(
-       [
-           parseFloat(req.params.i), // string to float
-           parseFloat(req.params.r)
-       ]
-   ).then((jres)=>{
-       cls_model.classify(
-            [
-                parseFloat(req.params.i), // string to float
-                parseFloat(req.params.r),
-                parseFloat(jres[0]),
-                parseFloat(jres[1])
-            ]
-        ).then((jres_)=>{
-           res.json(jres_)
-        })
-     })
-});
-
-module.exports = r;
+module.exports = {
+    classify: classify
+}
+  
