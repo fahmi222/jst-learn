@@ -59,7 +59,6 @@ bot.on('message', (msg) => {
                          msg.chat.id
                          `klasifikasi Tegangan ${jres2}`
                  );
-                 state = 0;
              })
          })
    }else{
@@ -84,7 +83,7 @@ r.get(`/classify/:i/:r`, function(req, res, next) {
    model.predict(
        [
            parseFloat(req.params.i), // string to float
-           parseFloat(req.params.r)
+           parseFloat(req.params.r),
        ]
    ).then((jres)=>{
        cls_model.classify(
@@ -95,7 +94,7 @@ r.get(`/classify/:i/:r`, function(req, res, next) {
                 parseFloat(jres[1])
             ]
         ).then((jres_)=>{
-           res.json({jres, jres_})
+           res.json(jres_)
         })
      })
 });
