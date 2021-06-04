@@ -74,7 +74,7 @@ r.get('/predict/:i/:r', function(req, res, next) {
            parseFloat(req.params.r)
        ]
    ).then((jres_)=>{
-       res.json(jres);
+       res.json({jres, jres_});
     })
 });
 
