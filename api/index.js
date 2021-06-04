@@ -15,7 +15,7 @@ state = 0;
 bot.onText(/\/start/, (msg) => {
     bot.sendMessage(
         msg.chat.id,
-        `hello $(msg.chat.fist_name), welcome...\n
+        `hello $(Fahmi Baihaqi), welcome...\n
         click /predict`
     );
     state = 0;
