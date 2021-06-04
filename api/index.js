@@ -61,10 +61,6 @@ bot.on('message', (msg) => {
              })
          })
    }else{
-       bot.sendMessage(
-       msg.chat.id,
-           `please Click /start`
-       );
          state = 0;
   })
 })
@@ -77,7 +73,7 @@ r.get('/predict/:i/:r', function(req, res, next) {
            parseFloat(req.params.r)
        ]
    ).then((jres_)=>{
-       res.json({jres, jres_});
+       res.json(jres);
     })
 });
 
