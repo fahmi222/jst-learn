@@ -25,7 +25,7 @@ bot.onText(/\/start/, (msg) => {
 bot.onText(/\/predict/, (msg) => {
     bot.sendMessage(
         msg.chat.id,
-        `masukan nilai i|v contohnya 13|13`
+        `masukan nilai i|v contohnya 9|9`
     );
     state = 1;
 });
@@ -42,7 +42,8 @@ bot.on('message', (msg) => {
                r   
             ]
          ).then((jres1)=>{
-            console.log(jres1);
+             v = parseFloat(jres1[0])
+             p = parseFloat(jres1[1])
             
             cls_model.classify([i, r, parseFloat(jres1[0]), parseFloat(jres1[1])]).then((jres2)=>{
                  bot.sendMessage(
