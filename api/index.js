@@ -3,7 +3,7 @@ var r = express.Router();
 
 // load pre-trained model
 const model = require('./sdk/model.js'); // predict
-const cls-model = require('./sdk/cls-model.js'); // cls
+const cls-model = require('./sdk/model.js'); // cls
 
 // Bot Setting
 const TelegramBot = require('node-telegram-bot-api');
@@ -45,14 +45,14 @@ bot.on('message', (msg) => {
              v = parseFloat(jres1[0])
              p = parseFloat(jres1[1])
             
-            cls_model.classify([i, r, parseFloat(jres1[0]), parseFloat(jres1[1])]).then((jres2)=>{
+            cls_model.classify([i, r, v, p]).then((jres2)=>{
                  bot.sendMessage(
                          msg.chat.id,
-                         `nilai v yang diprediksi adalah ${jres1[0]} volt`
+                         `nilai v yang diprediksi adalah ${v} volt`
                  );
                  bot.sendMessage(
                           msg.chat.id,
-                         `nilai p yang diprediksi adalah ${jres1[1]} watt`
+                         `nilai p yang diprediksi adalah ${p} watt`
                  );
                  bot.sendMessage(
                          msg.chat.id,
