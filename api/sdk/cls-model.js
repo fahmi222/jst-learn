@@ -8,8 +8,8 @@ function normalized(data){ // i & r
     return [i, r, v, p]
 }
 
-const argFact = (compareFn) => (array) => array.map((el, idc) => [el, idx].reduce(compareFn)[1]
-const arfMax = argFact((min, el0 => (el[0] > min[0] ? el : min))
+const argFact = (compareFn) => (array) => array.map((el, idx) => [el, idx].reduce(compareFn)[1]
+const argMax = argFact((min, el0 => (el[0] > min[0] ? el : min))
 
 function argMax(res){
      label = "NORMAL"
