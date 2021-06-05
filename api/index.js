@@ -58,11 +58,10 @@ bot.on('message', (msg) => {
                          msg.chat.id,
                          `Klasifikasi Tegangan ${jres2}`
                  );
-                  state = 0;
              })
          })
    }else{
-         state = 0;
+         state = 0
   })
 })
 
